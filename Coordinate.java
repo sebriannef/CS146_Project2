@@ -52,5 +52,49 @@ public class Coordinate {
 	public void addNeighbor(Coordinate c) {
 		this.neighbors.add(c);
 	}
+	
+	/**
+	 * getNeighbors()
+	 * @return neighbors of the node
+	 */
+	public ArrayList<Coordinate> getNeighbors() {
+		return this.neighbors;
+	}
+	
+	/**
+	 * removeNWall()
+	 * removes the northern wall
+	 */
+	public void removeNWall() {
+		this.northernWall = false;
+		this.closedCell= false;
+	}
+	
+	/**
+	 * removeSWall()
+	 * removes the northern wall
+	 */
+	public void removeSWall() {
+		this.southernWall = false;
+		this.closedCell = false;
+	}
+	
+	/**
+	 * removeEWall()
+	 * removes the eastern wall
+	 */
+	public void removeEWall() {
+		this.easternWall = false;
+		this.closedCell = false;
+	}
+	
+	/**
+	 * removeWWall()
+	 * removes the eastern wall
+	 */
+	public void removeWWall() {
+		this.westernWall = false;
+		this.closedCell = false;
+	}
 
 }
