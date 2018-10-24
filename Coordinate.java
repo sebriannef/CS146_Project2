@@ -1,4 +1,4 @@
-package project2;
+//package project2;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ public class Coordinate {
 	boolean westernWall;
 	boolean closedCell;
 	ArrayList<Coordinate> neighbors;
+	Coordinate path;
 	
 	/**
 	 * Coordinate() ctor
@@ -21,6 +22,7 @@ public class Coordinate {
 		this.x = x;
 		this.y = y;
 		this.neighbors = new ArrayList<Coordinate>();
+		this.path = null;
 		northernWall = true;
 		southernWall = true;
 		easternWall = true;
@@ -51,6 +53,14 @@ public class Coordinate {
 	 */
 	public void addNeighbor(Coordinate c) {
 		this.neighbors.add(c);
+	}
+	
+	/**
+	 * addPath()
+	 * @param neighbor - a node to add a pointer to
+	 */
+	public void addPath(Coordinate c) {
+		this.path = c;
 	}
 	
 	/**

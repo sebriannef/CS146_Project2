@@ -1,4 +1,4 @@
-package project2;
+//package project2;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -109,18 +109,22 @@ public class Maze {
 				//first have to find which side of the currentCell the neighbor is on
 				if (currentCell.getX() < next.getX()) { //eastern
 					currentCell.removeEWall();
+					currentCell.addPath(next); //connect them in the graph
 					next.removeWWall();
 				}
 				else if (currentCell.getX() > next.getX()) { //western
 					currentCell.removeWWall();
+					currentCell.addPath(next);
 					next.removeEWall();
 				}
 				else if (currentCell.getY() > next.getY()) { //northern
 					currentCell.removeNWall();
+					currentCell.addPath(next); //connect them in the graph
 					next.removeSWall();
 				}
 				else { //southern
 					currentCell.removeSWall();
+					currentCell.addPath(next); //connect them in the graph
 					next.removeNWall();
 				}
 				
@@ -147,12 +151,17 @@ public class Maze {
 	 * displays a visual image of the maze
 	 */
 	public void displayMaze() {
-		for (int i = 0; i < grid.length; i++) {
-			
+		
+		//always have the starting and the ending point be set
+		grid[0][0].northernWall = false;
+		grid[grid.length - 1][grid.length -1].southernWall = false;
+		
+		for (int y = 0; y < grid.length; y++) {
 			//horizontal lines
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j].northernWall == true) { //if it has a northern wall
-					if (j == grid[0].length - 1) {	//add an extra plus at the end
+			for (int x = 0; x < grid.length; x++) {
+				Coordinate node = grid[x][y];
+				if (node.northernWall == true) { //if it has a northern wall
+					if (x == grid[0].length - 1) {	//add an extra plus at the end
 						System.out.println("+-+");
 					}
 					else {
@@ -160,7 +169,7 @@ public class Maze {
 					}
 				}
 				else { //no northern wall
-					if (j == grid[0].length - 1) {	//add an extra plus at the end
+					if (x == grid[0].length - 1) {	//add an extra plus at the end
 						System.out.println("+ +");
 					}
 					else {
@@ -170,9 +179,9 @@ public class Maze {
 			}
 			
 			//vertical lines
-			for (int j = 0; j < grid[0].length; j++) {
-				if (grid[i][j].easternWall == true) { //if it has a eatsern wall
-					if (j == grid[0].length - 1) {	//add an extra | at the end
+			for (int x = 0; x < grid.length; x++) {
+				if (grid[x][y].westernWall == true) { //if it has a eatsern wall
+					if (x == grid[0].length - 1) {	//add an extra | at the end
 						System.out.println("| |");
 					}
 					else {
@@ -180,7 +189,7 @@ public class Maze {
 					}
 				}
 				else { //no eastern wall
-					if (j == grid[0].length - 1) {	//add an extra | at the end
+					if (x == grid[0].length - 1) {	//add an extra | at the end
 						System.out.println("  |");
 					}
 					else {
@@ -192,9 +201,9 @@ public class Maze {
 		}
 		
 		//now take care of the bottom border
-		for (int j = 0; j < grid[0].length; j++) {
-			if (grid[grid.length-1][j].southernWall == true) { //if it has a northern wall
-				if (j == grid[0].length - 1) {	//add an extra plus at the end
+		for (int x = 0; x < grid[0].length; x++) {
+			if (grid[x][grid.length-1].southernWall == true) { //if it has a northern wall
+				if (x == grid[0].length - 1) {	//add an extra plus at the end
 					System.out.println("+-+");
 				}
 				else {
@@ -202,7 +211,7 @@ public class Maze {
 				}
 			}
 			else { //no northern wall
-				if (j == grid[0].length - 1) {	//add an extra plus at the end
+				if (x == grid[0].length - 1) {	//add an extra plus at the end
 					System.out.println("+ +");
 				}
 				else {
