@@ -1,4 +1,4 @@
-//package project2;
+//package sjsu.kamel.cs146.project2;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ public class Coordinate {
 	boolean westernWall;
 	boolean closedCell;
 	ArrayList<Coordinate> neighbors;
+	ArrayList<Coordinate> noWallNeighbors;
 	Coordinate path;
 	
 	/**
@@ -22,6 +23,7 @@ public class Coordinate {
 		this.x = x;
 		this.y = y;
 		this.neighbors = new ArrayList<Coordinate>();
+		this.noWallNeighbors = new ArrayList<Coordinate>();
 		this.path = null;
 		northernWall = true;
 		southernWall = true;
@@ -82,7 +84,7 @@ public class Coordinate {
 	
 	/**
 	 * removeSWall()
-	 * removes the northern wall
+	 * removes the southern wall
 	 */
 	public void removeSWall() {
 		this.southernWall = false;
@@ -100,11 +102,39 @@ public class Coordinate {
 	
 	/**
 	 * removeWWall()
-	 * removes the eastern wall
+	 * removes the western wall
 	 */
 	public void removeWWall() {
 		this.westernWall = false;
 		this.closedCell = false;
+	}
+
+	/**
+	 * @author Adham Kamel
+	 * Prints the XY coordinate in string format
+	 */
+	public String toString(){
+		System.out.println("XY: " + this.getX() + ", " + this.getY());
+		return "";
+	}
+	
+	/**
+	 * adds neighbor of the coordinate without a wall
+	 * @author Adham Kamel
+	 * @param c
+	 */
+	public void addNoWallNeighbors(Coordinate c){
+		if (c.southernWall == false || c.northernWall == false || c.easternWall == false || c.westernWall == false){
+			this.noWallNeighbors.add(c);
+		}
+	}
+	
+	/**
+	 * @author Adham Kamel
+	 * @return the coordinate without a wall connected to it
+	 */
+	public ArrayList<Coordinate> getNoWallNeighbors(){
+		return this.noWallNeighbors;
 	}
 
 }
