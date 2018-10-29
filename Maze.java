@@ -1,3 +1,5 @@
+package project2;
+
 //package sjsu.kamel.cs146.project2;
 
 import java.util.*;
@@ -16,7 +18,7 @@ public class Maze {
 	Coordinate currentCell;
 	int visitedCells;
 	private Random myRandGen; // from instructions
-	ArrayList<Coordinate> marked;
+	ArrayList<Coordinate> marked; //what is this for???
 
 	/**
 	 * ctor for the class
@@ -188,15 +190,36 @@ public class Maze {
 				if (grid[x][y].westernWall == true) { // if it has a eatsern
 														// wall
 					if (x == grid[0].length - 1) { // add an extra | at the end
-						System.out.println("| |");
+						if (grid[x][y].order != -1) { //if it was visited 
+							System.out.printf("|%d|\n", grid[x][y].order);
+						}
+						else {
+							System.out.println("| |");
+						}
+						
 					} else {
-						System.out.print("| ");
+						if (grid[x][y].order != -1) { //if it was visited 
+							System.out.printf("|%d", grid[x][y].order);
+						}
+						else {
+							System.out.print("| ");
+						}
 					}
 				} else { // no eastern wall
 					if (x == grid[0].length - 1) { // add an extra | at the end
-						System.out.println("  |");
+						if (grid[x][y].order != -1) { //if it was visited 
+							System.out.printf(" %d|\n", grid[x][y].order);
+						}
+						else {
+							System.out.println("  |");
+						}
 					} else {
-						System.out.print("  ");
+						if (grid[x][y].order != -1) { //if it was visited  
+							System.out.printf(" %d", grid[x][y].order);
+						}
+						else {
+							System.out.print("  ");
+						}
 					}
 				}
 			}
@@ -226,28 +249,70 @@ public class Maze {
 	/**
 	 * Solves the maze in BFS
 	 * @param c
-	 * @author Adham Kamel
+	 * @author Adham Kamel and Sebrianne Ferguson
 	 */
 	public boolean solveMazeBFS(Coordinate c) {
 		Queue<Coordinate> toExplore = new LinkedList<>();
 		Coordinate exit = grid[grid.length - 1][grid.length - 1];
-		marked.add(c);
-		toExplore.add(c);
-		while (!toExplore.isEmpty()) {
-			Coordinate current = toExplore.remove();
-			this.generateNeighbors(current);
-			for (Coordinate neighbor : current.getNoWallNeighbors()) {
-				if (!marked.contains(neighbor)) {
-					marked.add(neighbor);
-					toExplore.add(neighbor);
-					System.out.print(neighbor.toString());
-				}
-				if (neighbor.equals(exit)) {
-					return true;
-				}
-
+		marked.add(c); //add to the list of visited nodes
+		toExplore.add(c); //add to the linked list
+		
+		c.order = 0;
+		int counter = 1; //for displaying all of the steps
+		
+		while (!toExplore.isEmpty()) { //while there is still stuff in the queue
+			Coordinate current = toExplore.remove(); //dequeue the element
+			
+			if (current.equals(exit)){ //check to see if you've gotten to the end
+				this.displayMaze();
+				return true;
 			}
+			
+			for (Coordinate neighbor : current.getNeighbors()) { //changed from getNoWallNeighbors()
+				
+				if (!marked.contains(neighbor)) {
+					
+					//check to see if there is actually a knocked down wall between the 2
+					//north 
+					if (current.northernWall == false && current.neighborType(neighbor) == Direction.NORTH) {
+						if (current.getX() != 0 && current.getY() != 0) { //youre not at the starting point
+							toExplore.add(neighbor);
+							marked.add(neighbor);
+							neighbor.order = counter % 10;
+							counter++;
+						}
+					}
+					
+					//next check the east
+					else if (current.easternWall == false && current.neighborType(neighbor) == Direction.EAST) {
+						toExplore.add(neighbor);
+						marked.add(neighbor);
+						neighbor.order = counter % 10;
+						counter++;
+					}
+					
+					//next check the south
+					else if (current.southernWall == false && current.neighborType(neighbor) == Direction.SOUTH) {
+						toExplore.add(neighbor);
+						marked.add(neighbor);
+						neighbor.order = counter % 10;
+						counter++;
+					}
+					
+					//next check the west
+					else if (current.westernWall == false && current.neighborType(neighbor) == Direction.WEST) {
+						toExplore.add(neighbor);
+						marked.add(neighbor);
+						neighbor.order = counter % 10;
+						counter++;
+					}
+					
+				}
+			}
+
 		}
+		
+		
 		return false;
 	}
 
@@ -283,11 +348,13 @@ public class Maze {
 	}
 
 	public static void main(String[] args) {
-		Maze m = new Maze(7);
+		Maze m = new Maze(3);
 		m.generateGrid();
 		m.generateMaze();
-		m.solveMazeDFS(m.getStart());
-		m.displayMaze();
+		//m.displayMaze();
+		m.solveMazeBFS(m.getStart());
+		//m.solveMazeDFS(m.getStart());
+		//m.displayMaze();
 	}
 
 }
