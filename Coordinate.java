@@ -162,7 +162,7 @@ public class Coordinate {
 		else if (c.getY() > this.getY()) {
 			return Direction.SOUTH;
 		}
-		return null; //in all other cases, shouldn't even get to this point.
+		return Direction.NA; //shouldnt get to this point
 	}
 
 }
