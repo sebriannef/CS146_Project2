@@ -325,7 +325,7 @@ public class Maze {
 	public boolean solveMazeDFS(Coordinate c) {
 		
 		//int time = 0; //to keep track for printing
-		c.order = time;
+		c.order = 0;
 		marked = new ArrayList<Coordinate>();
 		marked.add(c);
 		
@@ -362,6 +362,7 @@ public class Maze {
 		Coordinate exit = grid[grid.length - 1][grid.length - 1]; //where we want to stop
 		
 		if (current.equals(exit)) { //let the caller method know that we've found the path
+			current.finished = true; //for recursively backtracking 
 			return true;
 		}
 		
@@ -372,11 +373,11 @@ public class Maze {
 				//if so, then recursively call DFS_Visit on that neighbor
 				
 				if (current.northernWall == false && current.neighborType(neighbor) == Direction.NORTH) {
-					if (current.getX() != 0 && current.getY() != 0) { //youre not at the starting point
-						time++;
-						neighbor.order = time;
-						marked.add(neighbor);
-						DFS_Visit(neighbor, time);
+					time++;
+					neighbor.order = time;
+					marked.add(neighbor);
+					if (DFS_Visit(neighbor, time)) {
+						return true;
 					}
 				}
 				
@@ -385,7 +386,9 @@ public class Maze {
 					time++;
 					neighbor.order = time;
 					marked.add(neighbor);
-					DFS_Visit(neighbor, time);
+					if (DFS_Visit(neighbor, time)) {
+						return true;
+					}
 				}
 				
 				//next check the south
@@ -393,7 +396,9 @@ public class Maze {
 					time++;
 					neighbor.order = time;
 					marked.add(neighbor);
-					DFS_Visit(neighbor, time);
+					if (DFS_Visit(neighbor, time)) {
+						return true;
+					}
 				}
 				
 				//next check the west
@@ -401,7 +406,9 @@ public class Maze {
 					time++;
 					neighbor.order = time;
 					marked.add(neighbor);
-					DFS_Visit(neighbor, time);
+					if (DFS_Visit(neighbor, time)) {
+						return true;
+					}
 				}
 			}
 		}
