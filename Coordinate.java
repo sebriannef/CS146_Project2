@@ -1,3 +1,5 @@
+package project2;
+
 //package sjsu.kamel.cs146.project2;
 
 import java.util.ArrayList;
@@ -11,8 +13,11 @@ public class Coordinate {
 	boolean westernWall;
 	boolean closedCell;
 	ArrayList<Coordinate> neighbors;
-	ArrayList<Coordinate> noWallNeighbors;
+	ArrayList<Coordinate> noWallNeighbors; //added by Adham -- not really needed but whatever 
+	ArrayList<Coordinate> walledNeighbors;
 	Coordinate path;
+	//added by Sebrianne on 10/28
+	int order;
 	
 	/**
 	 * Coordinate() ctor
@@ -22,8 +27,10 @@ public class Coordinate {
 	public Coordinate(int x, int y) {
 		this.x = x;
 		this.y = y;
+		this.order = -1;//gonna be used to display the order in search
 		this.neighbors = new ArrayList<Coordinate>();
-		this.noWallNeighbors = new ArrayList<Coordinate>();
+		this.walledNeighbors = new ArrayList<Coordinate>();
+		this.noWallNeighbors = new ArrayList<Coordinate>(); //added by Adham
 		this.path = null;
 		northernWall = true;
 		southernWall = true;
@@ -135,6 +142,27 @@ public class Coordinate {
 	 */
 	public ArrayList<Coordinate> getNoWallNeighbors(){
 		return this.noWallNeighbors;
+	}
+	
+	
+	/**added by Sebrianne Ferguson
+	 * neighborType()
+	 * @param c - neighbor coordinate
+	 */
+	public Direction neighborType(Coordinate c) {
+		if (c.getX() > this.getX()) {
+			return Direction.EAST;
+		}
+		else if (c.getX() < this.getX()) {
+			return Direction.WEST;
+		}
+		else if (c.getY() < this.getY()) {
+			return Direction.NORTH;
+		}
+		else if (c.getY() > this.getY()) {
+			return Direction.SOUTH;
+		}
+		return null; //in all other cases, shouldn't even get to this point.
 	}
 
 }
