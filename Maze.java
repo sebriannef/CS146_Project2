@@ -18,6 +18,7 @@ public class Maze {
 	int visitedCells;
 	private Random myRandGen; // from instructions
 	ArrayList<Coordinate> marked; 
+	int time; //for dfs
 
 	/**
 	 * ctor for the class
@@ -31,6 +32,7 @@ public class Maze {
 		cellStack = new Stack<Coordinate>(); //for creating the maze
 		myRandGen = new java.util.Random(0); // seed is 0 -- from instructions
 		marked = new ArrayList<Coordinate>(); //for BFS to find the path
+		time = 0;
 	}
 
 	/**
@@ -322,19 +324,18 @@ public class Maze {
 	 */
 	public boolean solveMazeDFS(Coordinate c) {
 		
-		int time = 0; //to keep track for printing
+		//int time = 0; //to keep track for printing
 		c.order = time;
+		marked = new ArrayList<Coordinate>();
+		marked.add(c);
 		
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid.length; y++) {
-				
-				if (!marked.contains(grid[x][y])) {
 					boolean dfs = DFS_Visit(grid[x][y], time);
 					if (dfs == true) {
 						this.displayMaze();
 						return true;
 					}
-				}
 				
 			}
 		}
@@ -366,36 +367,42 @@ public class Maze {
 		
 		//if we haven't gotten to the end, look for an available neighbor and dfs that neighbor
 		for (Coordinate neighbor: current.neighbors) {
-			//check to see if there is a wall down between the current node and the neighbor
-			//if so, then recursively call DFS_Visit on that neighbor
-			
-			if (current.northernWall == false && current.neighborType(neighbor) == Direction.NORTH) {
-				if (current.getX() != 0 && current.getY() != 0) { //youre not at the starting point
+			if(!marked.contains(neighbor)) {
+				//check to see if there is a wall down between the current node and the neighbor
+				//if so, then recursively call DFS_Visit on that neighbor
+				
+				if (current.northernWall == false && current.neighborType(neighbor) == Direction.NORTH) {
+					if (current.getX() != 0 && current.getY() != 0) { //youre not at the starting point
+						time++;
+						neighbor.order = time;
+						marked.add(neighbor);
+						DFS_Visit(neighbor, time);
+					}
+				}
+				
+				//next check the east
+				else if (current.easternWall == false && current.neighborType(neighbor) == Direction.EAST) {
 					time++;
 					neighbor.order = time;
+					marked.add(neighbor);
 					DFS_Visit(neighbor, time);
 				}
-			}
-			
-			//next check the east
-			else if (current.easternWall == false && current.neighborType(neighbor) == Direction.EAST) {
-				time++;
-				neighbor.order = time;
-				DFS_Visit(neighbor, time);
-			}
-			
-			//next check the south
-			else if (current.southernWall == false && current.neighborType(neighbor) == Direction.SOUTH) {
-				time++;
-				neighbor.order = time;
-				DFS_Visit(neighbor, time);
-			}
-			
-			//next check the west
-			else if (current.westernWall == false && current.neighborType(neighbor) == Direction.WEST) {
-				time++;
-				neighbor.order = time;
-				DFS_Visit(neighbor, time);
+				
+				//next check the south
+				else if (current.southernWall == false && current.neighborType(neighbor) == Direction.SOUTH) {
+					time++;
+					neighbor.order = time;
+					marked.add(neighbor);
+					DFS_Visit(neighbor, time);
+				}
+				
+				//next check the west
+				else if (current.westernWall == false && current.neighborType(neighbor) == Direction.WEST) {
+					time++;
+					neighbor.order = time;
+					marked.add(neighbor);
+					DFS_Visit(neighbor, time);
+				}
 			}
 		}
 		
@@ -407,7 +414,7 @@ public class Maze {
 		Maze m = new Maze(3);
 		m.generateGrid();
 		m.generateMaze();
-		//m.displayMaze();
+		m.displayMaze();
 		m.solveMazeDFS(m.getStart());
 		//m.solveMazeDFS(m.getStart());
 		//m.displayMaze();
