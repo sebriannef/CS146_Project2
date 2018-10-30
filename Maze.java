@@ -363,8 +363,12 @@ public class Maze {
 				return true;
 			}
 			
+			int newNeighbors = 0; //to keep track of whether or not we're at a dead end
+			
 			for (Coordinate neighbor : current.getNeighbors()) {
 				if (!marked.contains(neighbor)) { //if we havent gone to this coordinate already
+					
+					newNeighbors++;
 					
 					//check to see if there is actually a knocked down wall between the 2
 					//north 
@@ -402,6 +406,10 @@ public class Maze {
 					}
 					
 				}
+			}
+			
+			if (newNeighbors == 0) {
+				current.end = true;
 			}
 
 		}
@@ -528,10 +536,10 @@ public class Maze {
 		m.generateGrid();
 		m.generateMaze();
 		m.displayMaze();
-		m.solveMazeDFS(m.getStart());
-		m.displayHashtagMaze();
 		//m.solveMazeDFS(m.getStart());
-		//m.displayMaze();
+		//m.displayHashtagMaze();
+		m.solveMazeBFS(m.getStart());
+		m.displayHashtagMaze();
 	}
 
 }
