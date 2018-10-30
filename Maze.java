@@ -320,7 +320,7 @@ public class Maze {
 	/**
 	 * Solves the maze in DFS
 	 * @param c
-	 * @author Adham Kamel
+	 * @author Adham Kamel and Sebrianne Ferguson
 	 */
 	public boolean solveMazeDFS(Coordinate c) {
 		
