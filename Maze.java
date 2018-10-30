@@ -246,6 +246,99 @@ public class Maze {
 			}
 		}
 	} // end of display maze
+	
+	/**
+	 * displayHashtagMaze()
+	 * @author Sebrianne Ferguson 
+	 * displays a visual image of the maze with the hashtags instead of the numbers
+	 */
+	public void displayHashtagMaze() {
+
+		// always have the starting and the ending point be set
+		grid[0][0].northernWall = false;
+		grid[grid.length - 1][grid.length - 1].southernWall = false;
+
+		for (int y = 0; y < grid.length; y++) {
+			// horizontal lines
+			for (int x = 0; x < grid.length; x++) {
+				Coordinate node = grid[x][y];
+				if (node.northernWall == true) { // if it has a northern wall
+					if (x == grid[0].length - 1) { // add an extra plus at the
+													// end
+						System.out.println("+-+");
+					} else {
+						System.out.print("+-");
+					}
+				} else { // no northern wall
+					if (x == grid[0].length - 1) { // add an extra plus at the
+													// end
+						System.out.println("+ +");
+					} else {
+						System.out.print("+ ");
+					}
+				}
+			}
+
+			// vertical lines
+			for (int x = 0; x < grid.length; x++) {
+				if (grid[x][y].westernWall == true) { // if it has a eatsern
+														// wall
+					if (x == grid[0].length - 1) { // add an extra | at the end
+						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited 
+							System.out.print("|#|\n");
+						}
+						else {
+							System.out.println("| |");
+						}
+						
+					} else {
+						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited 
+							System.out.print("|#");
+						}
+						else {
+							System.out.print("| ");
+						}
+					}
+				} else { // no eastern wall
+					if (x == grid[0].length - 1) { // add an extra | at the end
+						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited 
+							System.out.print(" #|\n");
+						}
+						else {
+							System.out.println("  |");
+						}
+					} else {
+						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited  
+							System.out.print(" #");
+						}
+						else {
+							System.out.print("  ");
+						}
+					}
+				}
+			}
+
+		}
+
+		// now take care of the bottom border
+		for (int x = 0; x < grid[0].length; x++) {
+			if (grid[x][grid.length - 1].southernWall == true) { // if it has a
+																	// northern
+																	// wall
+				if (x == grid[0].length - 1) { // add an extra plus at the end
+					System.out.println("+-+");
+				} else {
+					System.out.print("+-");
+				}
+			} else { // no northern wall
+				if (x == grid[0].length - 1) { // add an extra plus at the end
+					System.out.println("+ +");
+				} else {
+					System.out.print("+ ");
+				}
+			}
+		}
+	} // end of display maze
 
 	/**
 	 * Solves the maze in BFS
@@ -340,6 +433,7 @@ public class Maze {
 			}
 		}
 		
+		//if you can't find a path
 		return false;
 	}
 	
@@ -362,7 +456,6 @@ public class Maze {
 		Coordinate exit = grid[grid.length - 1][grid.length - 1]; //where we want to stop
 		
 		if (current.equals(exit)) { //let the caller method know that we've found the path
-			current.finished = true; //for recursively backtracking 
 			return true;
 		}
 		
@@ -424,7 +517,8 @@ public class Maze {
 				}
 			}
 		}
-		
+
+		current.end = true;
 		return false;
 		
 	}
@@ -435,6 +529,7 @@ public class Maze {
 		m.generateMaze();
 		m.displayMaze();
 		m.solveMazeDFS(m.getStart());
+		m.displayHashtagMaze();
 		//m.solveMazeDFS(m.getStart());
 		//m.displayMaze();
 	}

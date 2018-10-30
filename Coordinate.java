@@ -18,6 +18,7 @@ public class Coordinate {
 	Coordinate path;
 	//added by Sebrianne on 10/28
 	int order;
+	boolean end; //for dfs, if you've gotten to a part of the maze and there's no pathway
 	
 	/**
 	 * Coordinate() ctor
@@ -37,6 +38,8 @@ public class Coordinate {
 		easternWall = true;
 		westernWall = true;
 		closedCell = true;
+		
+		end = false; //for dfs, will not print the hashtag for a coordinate where there is no path left
 	}
 	
 	/**
