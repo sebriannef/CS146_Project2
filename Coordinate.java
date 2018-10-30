@@ -5,20 +5,17 @@ package project2;
 import java.util.ArrayList;
 
 public class Coordinate {
-	int x;
-	int y;
-	boolean northernWall;
+	int x; //x coordinate
+	int y; //y coordinate
+	boolean northernWall; 
 	boolean southernWall;
 	boolean easternWall;
 	boolean westernWall;
 	boolean closedCell;
-	ArrayList<Coordinate> neighbors;
-	ArrayList<Coordinate> noWallNeighbors; //added by Adham -- not really needed but whatever 
-	ArrayList<Coordinate> walledNeighbors;
-	Coordinate path;
-	//added by Sebrianne on 10/28
-	int order;
-	boolean end; //for dfs, if you've gotten to a part of the maze and there's no pathway
+	ArrayList<Coordinate> neighbors; //all the neighbors of the node
+	ArrayList<Coordinate> walledNeighbors; //all the neighbors whose closedCell == true
+	int order; //added by Sebrianne on 10/28
+	Coordinate parent; 
 	
 	/**
 	 * Coordinate() ctor
@@ -31,15 +28,12 @@ public class Coordinate {
 		this.order = -1;//gonna be used to display the order in search
 		this.neighbors = new ArrayList<Coordinate>();
 		this.walledNeighbors = new ArrayList<Coordinate>();
-		this.noWallNeighbors = new ArrayList<Coordinate>(); //added by Adham
-		this.path = null;
 		northernWall = true;
 		southernWall = true;
 		easternWall = true;
 		westernWall = true;
 		closedCell = true;
-		
-		end = false; //for dfs, will not print the hashtag for a coordinate where there is no path left
+		parent = null;
 	}
 	
 	/**
@@ -65,14 +59,6 @@ public class Coordinate {
 	 */
 	public void addNeighbor(Coordinate c) {
 		this.neighbors.add(c);
-	}
-	
-	/**
-	 * addPath()
-	 * @param neighbor - a node to add a pointer to
-	 */
-	public void addPath(Coordinate c) {
-		this.path = c;
 	}
 	
 	/**
@@ -128,25 +114,6 @@ public class Coordinate {
 		return "";
 	}
 	
-	/**
-	 * adds neighbor of the coordinate without a wall
-	 * @author Adham Kamel
-	 * @param c
-	 */
-	public void addNoWallNeighbors(Coordinate c){
-		if (c.southernWall == false || c.northernWall == false || c.easternWall == false || c.westernWall == false){
-			this.noWallNeighbors.add(c);
-		}
-	}
-	
-	/**
-	 * @author Adham Kamel
-	 * @return the coordinate without a wall connected to it
-	 */
-	public ArrayList<Coordinate> getNoWallNeighbors(){
-		return this.noWallNeighbors;
-	}
-	
 	
 	/**added by Sebrianne Ferguson
 	 * neighborType()
@@ -167,5 +134,15 @@ public class Coordinate {
 		}
 		return Direction.NA; //shouldnt get to this point
 	}
+	
+	/**
+	 * addParent() 
+	 * @author Sebrianne Ferguson
+	 * @param c - coordinate to make parent
+	 */
+	public void addParent(Coordinate c) {
+		this.parent = c;
+	}
+	
 
 }

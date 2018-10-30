@@ -32,7 +32,7 @@ public class Maze {
 		cellStack = new Stack<Coordinate>(); //for creating the maze
 		myRandGen = new java.util.Random(0); // seed is 0 -- from instructions
 		marked = new ArrayList<Coordinate>(); //for BFS to find the path
-		time = 0;
+		time = 0; //for the depth first search
 	}
 
 	/**
@@ -240,105 +240,12 @@ public class Maze {
 	} // end of display maze
 	
 	/**
-	 * displayHashtagMaze()
-	 * @author Sebrianne Ferguson 
-	 * displays a visual image of the maze with the hashtags instead of the numbers
-	 */
-	public void displayHashtagMaze() {
-
-		// always have the starting and the ending point be set
-		grid[0][0].northernWall = false;
-		grid[grid.length - 1][grid.length - 1].southernWall = false;
-
-		for (int y = 0; y < grid.length; y++) {
-			// horizontal lines
-			for (int x = 0; x < grid.length; x++) {
-				Coordinate node = grid[x][y];
-				if (node.northernWall == true) { // if it has a northern wall
-					if (x == grid[0].length - 1) { // add an extra plus at the
-													// end
-						System.out.println("+-+");
-					} else {
-						System.out.print("+-");
-					}
-				} else { // no northern wall
-					if (x == grid[0].length - 1) { // add an extra plus at the
-													// end
-						System.out.println("+ +");
-					} else {
-						System.out.print("+ ");
-					}
-				}
-			}
-
-			// vertical lines
-			for (int x = 0; x < grid.length; x++) {
-				if (grid[x][y].westernWall == true) { // if it has a eatsern
-														// wall
-					if (x == grid[0].length - 1) { // add an extra | at the end
-						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited 
-							System.out.print("|#|\n");
-						}
-						else {
-							System.out.println("| |");
-						}
-						
-					} else {
-						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited 
-							System.out.print("|#");
-						}
-						else {
-							System.out.print("| ");
-						}
-					}
-				} else { // no eastern wall
-					if (x == grid[0].length - 1) { // add an extra | at the end
-						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited 
-							System.out.print(" #|\n");
-						}
-						else {
-							System.out.println("  |");
-						}
-					} else {
-						if (grid[x][y].order != -1 && grid[x][y].end == false) { //if it was visited  
-							System.out.print(" #");
-						}
-						else {
-							System.out.print("  ");
-						}
-					}
-				}
-			}
-
-		}
-
-		// now take care of the bottom border
-		for (int x = 0; x < grid[0].length; x++) {
-			if (grid[x][grid.length - 1].southernWall == true) { // if it has a
-																	// northern
-																	// wall
-				if (x == grid[0].length - 1) { // add an extra plus at the end
-					System.out.println("+-+");
-				} else {
-					System.out.print("+-");
-				}
-			} else { // no northern wall
-				if (x == grid[0].length - 1) { // add an extra plus at the end
-					System.out.println("+ +");
-				} else {
-					System.out.print("+ ");
-				}
-			}
-		}
-	} // end of display maze
-	
-	/**
-	 * displayHashtagBFS()
+	 * displayHashtag()
 	 * @author Sebrianne Ferguson 
 	 * displays a visual image of the maze with the hashtags instead of the numbers
 	 * version only for breadth first search
 	 */
-	public void displayHashtagBFS() {
+	public void displayHashtag() {
 		
 		
 		ArrayList<Coordinate> path = new ArrayList<Coordinate>();
@@ -457,12 +364,8 @@ public class Maze {
 				return true;
 			}
 			
-			int newNeighbors = 0; //to keep track of whether or not we're at a dead end
-			
 			for (Coordinate neighbor : current.getNeighbors()) {
 				if (!marked.contains(neighbor)) { //if we havent gone to this coordinate already
-					
-					newNeighbors++;
 					
 					//check to see if there is actually a knocked down wall between the 2
 					//north 
@@ -505,10 +408,7 @@ public class Maze {
 					
 				}
 			}
-			
-			if (newNeighbors == 0) {
-				current.end = true;
-			}
+
 
 		}
 		
@@ -530,7 +430,7 @@ public class Maze {
 		
 		for (int x = 0; x < grid.length; x++) {
 			for (int y = 0; y < grid.length; y++) {
-					boolean dfs = DFS_Visit(grid[x][y], time);
+					boolean dfs = DFS_Visit(grid[x][y]);
 					if (dfs == true) {
 						this.displayMaze();
 						return true;
@@ -557,78 +457,76 @@ public class Maze {
 	 * @param c - the coordinate we're doing dfs on
 	 * @param time - the number of steps you've taken so far
 	 */
-	public boolean DFS_Visit(Coordinate current, int time) {
+	public boolean DFS_Visit(Coordinate current) {
 		
 		Coordinate exit = grid[grid.length - 1][grid.length - 1]; //where we want to stop
 		
 		if (current.equals(exit)) { //let the caller method know that we've found the path
 			return true;
 		}
-		
+
 		//if we haven't gotten to the end, look for an available neighbor and dfs that neighbor
 		for (Coordinate neighbor: current.neighbors) {
 			if(!marked.contains(neighbor)) {
 				//check to see if there is a wall down between the current node and the neighbor
 				//if so, then recursively call DFS_Visit on that neighbor
-				
+				//newNeighbors++;
 				if (current.northernWall == false && current.neighborType(neighbor) == Direction.NORTH) {
 					time++;
-					neighbor.order = time;
+					neighbor.order = time % 10;
+					neighbor.addParent(current);
 					marked.add(neighbor);
-					if (DFS_Visit(neighbor, time)) {
+					if (DFS_Visit(neighbor)) {
 						return true;
 					}
-					else {
-						time++; //added this as of 10/29 in order to get rid of duplicate numbers
-					}
+
 				}
 				
 				//next check the east
 				else if (current.easternWall == false && current.neighborType(neighbor) == Direction.EAST) {
 					time++;
-					neighbor.order = time;
+					neighbor.order = time % 10;
+					neighbor.addParent(current);
 					marked.add(neighbor);
-					if (DFS_Visit(neighbor, time)) {
+					if (DFS_Visit(neighbor)) {
 						return true;
 					}
-					else {
-						time++; //added this as of 10/29 in order to get rid of duplicate numbers
-					}
+
 				}
 				
 				//next check the south
 				else if (current.southernWall == false && current.neighborType(neighbor) == Direction.SOUTH) {
 					time++;
-					neighbor.order = time;
+					neighbor.order = time % 10;
+					neighbor.addParent(current);
 					marked.add(neighbor);
-					if (DFS_Visit(neighbor, time)) {
+					if (DFS_Visit(neighbor)) {
 						return true;
 					}
-					else {
-						time++; //added this as of 10/29 in order to get rid of duplicate numbers
-					}
+
 				}
 				
 				//next check the west
 				else if (current.westernWall == false && current.neighborType(neighbor) == Direction.WEST) {
 					time++;
-					neighbor.order = time;
+					neighbor.order = time % 10;
+					neighbor.addParent(current);
 					marked.add(neighbor);
-					if (DFS_Visit(neighbor, time)) {
+					if (DFS_Visit(neighbor)) {
 						return true;
 					}
-					else {
-						time++; //added this as of 10/29 in order to get rid of duplicate numbers
-					}
+
 				}
 			}
+			
+
 		}
 
-		current.end = true;
 		return false;
 		
 	}
 
+	/**
 	public static void main(String[] args) {
 		Maze m = new Maze(4);
 		m.generateGrid();
@@ -638,6 +536,6 @@ public class Maze {
 		//m.displayHashtagMaze();
 		m.solveMazeBFS(m.getStart());
 		m.displayHashtagBFS();
-	}
+	}*/
 
 }
