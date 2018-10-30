@@ -116,24 +116,16 @@ public class Maze {
 				// is on
 				if (currentCell.getX() < next.getX()) { //if next is to the east of currentCell
 					currentCell.removeEWall();
-					currentCell.addPath(next); // connect them in the graph
 					next.removeWWall();
-					currentCell.addNoWallNeighbors(next);
 				} else if (currentCell.getX() > next.getX()) { //if next is to the west
 					currentCell.removeWWall();
-					currentCell.addPath(next);
 					next.removeEWall();
-					currentCell.addNoWallNeighbors(next);
 				} else if (currentCell.getY() > next.getY()) { //if next is to the north of currentCell
 					currentCell.removeNWall();
-					currentCell.addPath(next); // connect them in the graph
 					next.removeSWall();
-					currentCell.addNoWallNeighbors(next);
 				} else { //if next is to the south of currentCell
 					currentCell.removeSWall();
-					currentCell.addPath(next); // connect them in the graph
 					next.removeNWall();
-					currentCell.addNoWallNeighbors(next);
 				}
 
 				// push CurrentCell location on the CellStack
@@ -339,6 +331,108 @@ public class Maze {
 			}
 		}
 	} // end of display maze
+	
+	/**
+	 * displayHashtagBFS()
+	 * @author Sebrianne Ferguson 
+	 * displays a visual image of the maze with the hashtags instead of the numbers
+	 * version only for breadth first search
+	 */
+	public void displayHashtagBFS() {
+		
+		
+		ArrayList<Coordinate> path = new ArrayList<Coordinate>();
+		Coordinate cord = grid[grid.length -1][grid.length -1];
+		path.add(cord);
+		while (cord != this.getStart()) {
+			path.add(cord.parent);
+			cord = cord.parent;
+		}
+		// always have the starting and the ending point be set
+		grid[0][0].northernWall = false;
+		grid[grid.length - 1][grid.length - 1].southernWall = false;
+
+		for (int y = 0; y < grid.length; y++) {
+			// horizontal lines
+			for (int x = 0; x < grid.length; x++) {
+				Coordinate node = grid[x][y];
+				if (node.northernWall == true) { // if it has a northern wall
+					if (x == grid[0].length - 1) { // add an extra plus at the
+													// end
+						System.out.println("+-+");
+					} else {
+						System.out.print("+-");
+					}
+				} else { // no northern wall
+					if (x == grid[0].length - 1) { // add an extra plus at the
+													// end
+						System.out.println("+ +");
+					} else {
+						System.out.print("+ ");
+					}
+				}
+			}
+
+			// vertical lines
+			for (int x = 0; x < grid.length; x++) {
+				if (grid[x][y].westernWall == true) { // if it has a eatsern
+														// wall
+					if (x == grid[0].length - 1) { // add an extra | at the end
+						if (grid[x][y].order != -1 && path.contains(grid[x][y])) { //if it was visited 
+							System.out.print("|#|\n");
+						}
+						else {
+							System.out.println("| |");
+						}
+						
+					} else {
+						if (grid[x][y].order != -1 && path.contains(grid[x][y])) { //if it was visited 
+							System.out.print("|#");
+						}
+						else {
+							System.out.print("| ");
+						}
+					}
+				} else { // no eastern wall
+					if (x == grid[0].length - 1) { // add an extra | at the end
+						if (grid[x][y].order != -1 && path.contains(grid[x][y])) { //if it was visited 
+							System.out.print(" #|\n");
+						}
+						else {
+							System.out.println("  |");
+						}
+					} else {
+						if (grid[x][y].order != -1 && path.contains(grid[x][y])) { //if it was visited  
+							System.out.print(" #");
+						}
+						else {
+							System.out.print("  ");
+						}
+					}
+				}
+			}
+
+		}
+
+		// now take care of the bottom border
+		for (int x = 0; x < grid[0].length; x++) {
+			if (grid[x][grid.length - 1].southernWall == true) { // if it has a
+																	// northern
+																	// wall
+				if (x == grid[0].length - 1) { // add an extra plus at the end
+					System.out.println("+-+");
+				} else {
+					System.out.print("+-");
+				}
+			} else { // no northern wall
+				if (x == grid[0].length - 1) { // add an extra plus at the end
+					System.out.println("+ +");
+				} else {
+					System.out.print("+ ");
+				}
+			}
+		}
+	} // end of display maze
 
 	/**
 	 * Solves the maze in BFS
@@ -377,6 +471,7 @@ public class Maze {
 							toExplore.add(neighbor); //add to the queue
 							marked.add(neighbor); //add to the visited nodes list
 							neighbor.order = counter % 10; //so the display isn't shifted
+							neighbor.addParent(current);
 							counter++;
 						}
 					}
@@ -386,6 +481,7 @@ public class Maze {
 						toExplore.add(neighbor);
 						marked.add(neighbor);
 						neighbor.order = counter % 10;
+						neighbor.addParent(current);
 						counter++;
 					}
 					
@@ -394,6 +490,7 @@ public class Maze {
 						toExplore.add(neighbor);
 						marked.add(neighbor);
 						neighbor.order = counter % 10;
+						neighbor.addParent(current);
 						counter++;
 					}
 					
@@ -402,6 +499,7 @@ public class Maze {
 						toExplore.add(neighbor);
 						marked.add(neighbor);
 						neighbor.order = counter % 10;
+						neighbor.addParent(current);
 						counter++;
 					}
 					
@@ -532,14 +630,14 @@ public class Maze {
 	}
 
 	public static void main(String[] args) {
-		Maze m = new Maze(3);
+		Maze m = new Maze(4);
 		m.generateGrid();
 		m.generateMaze();
 		m.displayMaze();
 		//m.solveMazeDFS(m.getStart());
 		//m.displayHashtagMaze();
 		m.solveMazeBFS(m.getStart());
-		m.displayHashtagMaze();
+		m.displayHashtagBFS();
 	}
 
 }
