@@ -379,6 +379,9 @@ public class Maze {
 					if (DFS_Visit(neighbor, time)) {
 						return true;
 					}
+					else {
+						time++; //added this as of 10/29 in order to get rid of duplicate numbers
+					}
 				}
 				
 				//next check the east
@@ -388,6 +391,9 @@ public class Maze {
 					marked.add(neighbor);
 					if (DFS_Visit(neighbor, time)) {
 						return true;
+					}
+					else {
+						time++; //added this as of 10/29 in order to get rid of duplicate numbers
 					}
 				}
 				
@@ -399,6 +405,9 @@ public class Maze {
 					if (DFS_Visit(neighbor, time)) {
 						return true;
 					}
+					else {
+						time++; //added this as of 10/29 in order to get rid of duplicate numbers
+					}
 				}
 				
 				//next check the west
@@ -408,6 +417,9 @@ public class Maze {
 					marked.add(neighbor);
 					if (DFS_Visit(neighbor, time)) {
 						return true;
+					}
+					else {
+						time++; //added this as of 10/29 in order to get rid of duplicate numbers
 					}
 				}
 			}
