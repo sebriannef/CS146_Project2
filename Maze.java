@@ -108,9 +108,9 @@ public class Maze {
 			}
 			// if one or more walled neighbors found choose one at random to knock down a wall
 			if (walledNeighbors.size() >= 1) {
-				Random r = new Random();
+				//Random r = new Random();
 				//choose one randomly
-				Coordinate next = walledNeighbors.get(r.nextInt(walledNeighbors.size()));
+				Coordinate next = walledNeighbors.get(myRandGen.nextInt(walledNeighbors.size()));
 				// knock down the wall between it and CurrentCell
 				// first have to find which side of the currentCell the neighbor
 				// is on
