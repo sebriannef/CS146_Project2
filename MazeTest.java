@@ -8,6 +8,10 @@
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,9 +29,10 @@ public class MazeTest {
 	Maze maze7;
 	Maze maze8;
 	Maze maze10;
-
+	String expected;
+	
 	@Before
-	public void setUpGraphs() {
+	public void setUpGraphs() throws IOException{
 		maze4 = new Maze(graphSize4);
 		maze5 = new Maze(graphSize5);
 		maze6 = new Maze(graphSize6);
@@ -36,8 +41,14 @@ public class MazeTest {
 		maze10 = new Maze(graphSize10);
 	}
 
+	/*
+	 * Runs the BFS and DFS solver for the maze of size 4, 5, 6, 7, 8, 10
+	 */
 	@Test
-	public void testSize4() {
+	public void test() throws IOException {
+		/*
+		 * Size 4
+		 */
 		// BFS test
 		System.out.println("Graph Size: " + graphSize4);
 		maze4.generateGrid();
@@ -57,10 +68,10 @@ public class MazeTest {
 		System.out.println("=================");
 		System.out.println("Program Completed");
 		System.out.println("=================\n");
-	}
 
-	@Test
-	public void testSize5() {
+		/*
+		 * Size 5
+		 */
 		// BFS test
 		System.out.println("Graph Size: " + graphSize5);
 		maze5.generateGrid();
@@ -80,11 +91,11 @@ public class MazeTest {
 		System.out.println("=================");
 		System.out.println("Program Completed");
 		System.out.println("=================\n");
-	}
 
-	@Test
-	public void testSize6() {
-		// BFS test
+		/*
+		 * Size 6
+		 */
+		// BFS Test
 		System.out.println("Graph Size: " + graphSize6);
 		maze6.generateGrid();
 		maze6.generateMaze();
@@ -103,10 +114,10 @@ public class MazeTest {
 		System.out.println("=================");
 		System.out.println("Program Completed");
 		System.out.println("=================\n");
-	}
 
-	@Test
-	public void testSize7() {
+		/*
+		 * Size 7
+		 */
 		// BFS test
 		System.out.println("Graph Size: " + graphSize7);
 		maze7.generateGrid();
@@ -126,10 +137,10 @@ public class MazeTest {
 		System.out.println("=================");
 		System.out.println("Program Completed");
 		System.out.println("=================\n");
-	}
 
-	@Test
-	public void testSize8() {
+		/*
+		 * Size 8
+		 */
 		// BFS test
 		System.out.println("Graph Size: " + graphSize8);
 		maze8.generateGrid();
@@ -149,10 +160,10 @@ public class MazeTest {
 		System.out.println("=================");
 		System.out.println("Program Completed");
 		System.out.println("=================\n");
-	}
 
-	@Test
-	public void testSize10() {
+		/*
+		 * Size 10
+		 */
 		// BFS test
 		System.out.println("Graph Size: " + graphSize10);
 		maze10.generateGrid();
@@ -172,5 +183,18 @@ public class MazeTest {
 		System.out.println("=================");
 		System.out.println("Program Completed");
 		System.out.println("=================\n");
+
+		/*
+		 * Testing that the solution is equal to the expected file
+		 */
+		BufferedReader out = new BufferedReader(new FileReader("MazeSolver.txt")); 
+		BufferedReader in = new BufferedReader(new FileReader("Expected.txt")); 
+
+		while ((expected = in.readLine()) != null) {
+			String actualLine = out.readLine();
+			assertEquals(expected, actualLine);
+		}
+		out.close();
+		in.close();
 	}
 }
