@@ -1,7 +1,3 @@
-package project2;
-
-//package sjsu.kamel.cs146.project2;
-
 import java.util.*;
 
 /**
